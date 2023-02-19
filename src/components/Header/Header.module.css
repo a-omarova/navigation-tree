@@ -1,0 +1,38 @@
+.root {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+  background: var(--color-background-header);
+  color: white;
+}
+
+.themeSwitchLabel {
+  cursor: pointer;
+  display: flex;
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+}
+
+.themeIcons {
+  min-width: 48px;
+  transition: transform ease 0.3s;
+  transform: translateX(0);
+}
+
+.themeSwitchCheckbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.themeSwitchCheckbox:checked + .themeIcons {
+  transform: translateX(-24px);
+}
