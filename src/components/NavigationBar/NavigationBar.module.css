@@ -1,3 +1,24 @@
 .root {
+  font-size: 12px;
+  line-height: 16px;
+  padding: 24px 0;
+  max-width: 300px;
+  border-right: 1px solid var(--color-border);
+  overflow-y: auto;
+  height: calc(100vh - 212px);
+}
 
+.link {
+  display: flex;
+  align-items: center;
+  padding: 8px 32px 8px calc(var(--lvl-padding) + 32px);
+  cursor: pointer;
+}
+
+.link:hover {
+  background: var(--color-lvl-background-hover);
+}
+
+.linkIcon {
+  padding-right: 8px;
 }

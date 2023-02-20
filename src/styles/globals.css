@@ -7,8 +7,8 @@ body[theme=dark] {
   --color-text: #ffffff;
   --color-background-header: #0b0b0c;
   --color-background-footer: #0b0b0c;
-
-
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-lvl-background-hover: rgba(255, 255, 255, 0.07);
 }
 
 body[theme=light] {
@@ -16,6 +16,8 @@ body[theme=light] {
   --color-text: #19191c;
   --color-background-header: #27282c;
   --color-background-footer: #27282c;
+  --color-border: #e9e9e9;
+  --color-lvl-background-hover: #f9f9f9;
 }
 
 html {
@@ -35,4 +37,10 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }

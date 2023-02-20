@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styles from './NavigationBar.module.css'
-import newData from '@/data.json'
 import { DataType, PageType } from '@/types'
+import { Icon } from '@/components/Icon/Icon'
+import Link from 'next/link'
 
-export const NavigationBar = () => {
-  const [data, setData] = useState<DataType | null>(null)
+type NavigationBarPropsType = {
+  data: DataType | null
+}
 
-  useEffect(() => {
-    setData(newData)
-  }, [data])
+export const NavigationBar: React.FC<NavigationBarPropsType> = ({data}) => {
 
   const getTopLvlData = useMemo(() => {
     return (id: string) => {
@@ -20,26 +20,26 @@ export const NavigationBar = () => {
     return (
       section && (
         <li key={section.id}>
-          {section.pages
-            ? (
-              <>
-                <button>{section.title}</button>
-                {section.pages.map((id: string) => (
-                  <ul key={id}>
-                    {data && renderSections(data?.entities.pages[id])}
-                  </ul>
-                ))}
-              </>
-            )
-            : (<div>{section.title}</div>)
-          }
+          <Link
+            className={styles.link}
+            style={{'--lvl-padding': `${section.level} * 16px`} as React.CSSProperties}
+            href=""
+          >
+            {section.pages && <Icon name="triangle" className={styles.linkIcon}/>}
+            {section.title}
+          </Link>
+          <ul style={{display: "none"}}>
+            {section.pages && section.pages.map((id: string) => (
+              data && renderSections(data?.entities.pages[id])
+            ))}
+          </ul>
         </li>
       )
     )
   }, [data])
 
 
-  return (
+  return (data && (
     <nav className={styles.root}>
       <ul>
         {data && data.topLevelIds.map(id => (
@@ -47,5 +47,5 @@ export const NavigationBar = () => {
         ))}
       </ul>
     </nav>
-  )
+  ))
 }

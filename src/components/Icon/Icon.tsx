@@ -2,12 +2,14 @@ import React, { SVGAttributes } from 'react'
 import Light from '../../../public/icons/light.svg'
 import Dark from '../../../public/icons/dark.svg'
 import Home from '../../../public/icons/home.svg'
+import Triangle from '../../../public/icons/triangle.svg'
 
 
 const iconsList = {
   'light': Light,
   'dark': Dark,
-  'home': Home
+  'home': Home,
+  'triangle': Triangle
 }
 
 export type IconName = keyof typeof iconsList;
