@@ -1,22 +1,8 @@
 import Head from 'next/head'
-import React, { Suspense, useEffect, useState } from 'react'
-import { DataType } from '@/types'
-import { NavigationBar } from '@/components/NavigationBar/NavigationBar'
-import axios from 'axios'
+import React, { Suspense } from 'react'
+import { NavBar } from '@/components/NavigationBar/NavBar'
 
 export default function Home() {
-  const [data, setData] = useState<DataType | null>(null)
-
-  useEffect(() => {
-    axios.get("http://localhost:3000/api/data")
-      .then(function (response) {
-        setTimeout(() => {
-          setData(response.data)
-        }, 5000)
-      });
-
-  }, [data])
-
   return (
     <>
       <Head>
@@ -26,7 +12,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico"/>
       </Head>
       <Suspense fallback={<h2>🌀 Loading...</h2>}>
-        <NavigationBar data={data}/>
+        <NavBar />
       </Suspense>
     </>
   )

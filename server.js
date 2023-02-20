@@ -17,6 +17,39 @@ app.prepare()
       return res.send(data)
     })
 
+    server.get('/api/data/top-level', (req, res) => {
+      const listOfTopLvl = [];
+
+      data.topLevelIds.forEach((id) => {
+        const section = data.entities.pages[id]
+        listOfTopLvl.push({
+          id: id,
+          title: section.title,
+          level: section.level,
+          hasChildren: section.pages && section.pages.length !== 0
+        })
+      })
+
+      return res.send(listOfTopLvl)
+    })
+
+    server.get('/api/data/:id', (req, res) => {
+      const id = req.params.id;
+      const nodeList = []
+
+      data.entities.pages[id].pages.forEach((id) => {
+        const section = data.entities.pages[id]
+        nodeList.push({
+          id: id,
+          title: section.title,
+          level: section.level,
+          hasChildren: section.pages && section.pages.length !== 0
+        })
+      })
+
+      return res.send(nodeList)
+    })
+
     server.get('*', (req, res) => {
       return handle(req, res)
     })
