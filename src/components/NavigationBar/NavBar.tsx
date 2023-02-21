@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import styles from './NavBar.module.css'
 import axios from 'axios'
 import { NavBarBranch } from '@/components/NavigationBar/NavBarBranch'
+import { Icon } from '../Icon/Icon'
 
 type NodeProps = {
   id: string,
@@ -71,16 +72,25 @@ export const NavBar = () => {
 
   return (
     <nav className={styles.root}>
-      <ul>
-        {data && data.map(topLvlNode => (
-          <NavBarBranch
-            key={topLvlNode.id}
-            node={topLvlNode}
-            onGetNode={onGetNode}
-            idsPendingData={idsPendingData}
-          />
-        ))}
-      </ul>
+      {data.length !== 0
+        ? (
+          <ul>
+            {data && data.map(topLvlNode => (
+              <NavBarBranch
+                key={topLvlNode.id}
+                node={topLvlNode}
+                onGetNode={onGetNode}
+                idsPendingData={idsPendingData}
+              />
+            ))}
+          </ul>
+        )
+        : (
+          <Icon name="navPreload" className={styles.preload}/>
+        )
+
+      }
+
     </nav>
 
   )
