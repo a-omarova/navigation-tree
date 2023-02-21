@@ -18,7 +18,7 @@ app.prepare()
     })
 
     server.get('/api/data/top-level', (req, res) => {
-      const listOfTopLvl = [];
+      const listOfTopLvl = []
 
       data.topLevelIds.forEach((id) => {
         const section = data.entities.pages[id]
@@ -34,7 +34,7 @@ app.prepare()
     })
 
     server.get('/api/data/:id', (req, res) => {
-      const id = req.params.id;
+      const id = req.params.id
       const nodeList = []
 
       data.entities.pages[id].pages.forEach((id) => {
@@ -45,6 +45,26 @@ app.prepare()
           level: section.level,
           hasChildren: section.pages && section.pages.length !== 0
         })
+      })
+
+      return res.send(nodeList)
+    })
+
+    server.get('/api/search/:str', (req, res) => {
+      const nodeList = []
+      const keys = Object.keys(data.entities.pages)
+      const searchStr = req.params.str
+
+      keys.forEach((key) => {
+        if (data.entities.pages[key].title && data.entities.pages[key].title.includes(searchStr)) {
+          const section = data.entities.pages[key]
+          nodeList.push({
+            id: key,
+            title: section.title,
+            level: 0,
+            hasChildren: false
+          })
+        }
       })
 
       return res.send(nodeList)

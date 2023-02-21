@@ -9,6 +9,7 @@ body[theme=dark] {
   --color-background-header: var(--color-background-dark);
   --color-background-footer: var(--color-background-dark);
   --color-border: rgba(255, 255, 255, 0.2);
+  --color-clear-icon: rgba(217, 217, 217, 0.44);
   --color-lvl-background: #1f1f21;
   --color-lvl-background-hover: rgba(255, 255, 255, 0.05);
 }
@@ -19,6 +20,7 @@ body[theme=light] {
   --color-background-header: var(--color-background-dark);
   --color-background-footer: var(--color-background-dark);
   --color-border: rgba(25,25,28,0.2);
+  --color-clear-icon: rgba(51, 51, 51, 0.6);
   --color-lvl-background: #f9f9f9;
   --color-lvl-background-hover: rgba(25, 25, 28, 0.05);
 }
@@ -33,7 +35,6 @@ body {
   font-family: Inter, Arial, sans-serif;
   background-color: var(--color-background);
   color: var(--color-text);
-
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 

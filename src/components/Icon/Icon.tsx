@@ -4,6 +4,7 @@ import Dark from '../../../public/icons/dark.svg'
 import Home from '../../../public/icons/home.svg'
 import Triangle from '../../../public/icons/triangle.svg'
 import NavPreload from '../../../public/icons/nav-preload.svg'
+import Close from '../../../public/icons/close.svg'
 
 
 const iconsList = {
@@ -11,7 +12,8 @@ const iconsList = {
   'dark': Dark,
   'home': Home,
   'triangle': Triangle,
-  'navPreload': NavPreload
+  'navPreload': NavPreload,
+  'close': Close
 }
 
 export type IconName = keyof typeof iconsList;

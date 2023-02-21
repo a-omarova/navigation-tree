@@ -3,6 +3,7 @@ import styles from './NavBar.module.css'
 import axios from 'axios'
 import { NavBarBranch } from '@/components/NavigationBar/NavBarBranch'
 import { Icon } from '../Icon/Icon'
+import { Search } from '@/components/NavigationBar/Search/Search'
 
 type NodeProps = {
   id: string,
@@ -20,17 +21,23 @@ type TreeSearchType = {
 
 export const NavBar = () => {
   const [data, setData] = useState<NodeProps[] | []>([])
+  const [search, setSearch] = useState<string>('')
+  const [searchTimer, setSearchTimer] = useState<number | undefined>(undefined)
   const [idsPendingData, setIdsPendingData] = useState<string[]>([])
+  const [isPendingSearch, setIsPendingSearch] = useState<boolean>(false)
 
-  useEffect(() => {
+  const getTopLvlData = useCallback(() => {
     axios.get('http://localhost:3000/api/data/top-level')
       .then(function (response) {
         setTimeout(() => {
           setData(response.data)
         }, 1000)
       })
-
   }, [])
+
+  useEffect(() => {
+    getTopLvlData()
+  }, [getTopLvlData])
 
   const addDeleteTreeNode = useCallback(({node, id, data}: TreeSearchType) => {
     if (node.id === id) {
@@ -81,26 +88,59 @@ export const NavBar = () => {
     })
   }, [addDeleteTreeNode, data])
 
+  const onChangeSearch = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    setSearch(e.currentTarget.value)
+
+    window.clearTimeout(searchTimer)
+
+    const newTimer: number = window.setTimeout(() => {
+      setIsPendingSearch(true)
+      axios.get(`http://localhost:3000/api/search/${search}`)
+        .then(function (response) {
+          setTimeout(() => {
+            setData(response.data)
+            setIsPendingSearch(false)
+          }, 1000)
+        })
+        .catch(() => {
+          setIsPendingSearch(false)
+        })
+    }, 500)
+
+    setSearchTimer(newTimer)
+  }, [search, searchTimer])
+
+  const onClearSearch = useCallback(() => {
+    setSearch('')
+    getTopLvlData()
+  }, [])
+
   return (
     <nav className={styles.root}>
-      {data.length !== 0
-        ? (
-          <ul>
-            {data.map(topLvlNode => (
-              <NavBarBranch
-                key={topLvlNode.id}
-                node={topLvlNode}
-                onGetNode={onGetNode}
-                onDeleteNode={onDeleteNode}
-                idsPendingData={idsPendingData}
-              />
-            ))}
-          </ul>
-        )
-        : (
-          <Icon name="navPreload" className={styles.preload}/>
-        )
-      }
+      <div className={styles.search}>
+        <Search
+          search={search}
+          onChangeSearch={onChangeSearch}
+          onClearSearch={onClearSearch}
+        />
+        {isPendingSearch && <div className={styles.searchTitle}>Searching {search}...</div>}
+      </div>
+      {data.length !== 0 && (
+        <ul>
+          {data.map(topLvlNode => (
+            <NavBarBranch
+              key={topLvlNode.id}
+              node={topLvlNode}
+              onGetNode={onGetNode}
+              onDeleteNode={onDeleteNode}
+              idsPendingData={idsPendingData}
+            />
+          ))}
+        </ul>
+      )}
+      {data.length === 0 && search.length === 0 && (
+        <Icon name="navPreload" className={styles.preload}/>
+      )}
     </nav>
   )
 }
