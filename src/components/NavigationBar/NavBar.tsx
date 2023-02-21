@@ -19,6 +19,9 @@ type TreeSearchType = {
 
 export const NavBar = () => {
   const [data, setData] = useState<NodeProps[] | []>([])
+  const [idsPendingData, setIdsPendingData] = useState<string[]>([])
+
+  console.log(idsPendingData)
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/data/top-level')
@@ -31,29 +34,40 @@ export const NavBar = () => {
   }, [])
 
   const treeSearch = useCallback(({node, id, data}: TreeSearchType) => {
-    if (node.id === id) {
+    if (node.id === id && !node.pages) {
       node.pages = data
     } else if (node.pages) {
       node.pages.forEach((page) => {
-        console.log('aloha')
         treeSearch({node: page, id, data})
       })
     }
   }, [])
 
-  const onGetNode = useCallback( (id: string) => {
+  const onGetNode = useCallback(async (id: string) => {
     const newData = [...data]
+    const dataAlreadyPending = idsPendingData.find((dataId) => dataId === id)
+    const deletePendingData = (deleteId: string, currentData: string[]) => currentData.filter((dataId) => dataId !== deleteId)
 
-    console.log(id)
+    if (!dataAlreadyPending) {
+      setIdsPendingData((data) => [...data, id])
+    }
 
-    axios.get(`http://localhost:3000/api/data/${id}`)
+    await axios.get(`http://localhost:3000/api/data/${id}`)
       .then(function (response) {
-        newData.forEach((node) => {
-          treeSearch({node, id, data: response.data})
-        })
-      })
-  }, [data, treeSearch])
 
+        setTimeout(() => {
+          setIdsPendingData((prevData) => deletePendingData(id, prevData))
+          newData.forEach((node) => {
+            treeSearch({node, id, data: response.data})
+          })
+
+          setData(newData)
+        }, 1000)
+      })
+      .catch(() => {
+        setIdsPendingData((prevData) => deletePendingData(id, prevData))
+      })
+  }, [data, idsPendingData, treeSearch])
 
   return (
     <nav className={styles.root}>
@@ -63,6 +77,7 @@ export const NavBar = () => {
             key={topLvlNode.id}
             node={topLvlNode}
             onGetNode={onGetNode}
+            idsPendingData={idsPendingData}
           />
         ))}
       </ul>

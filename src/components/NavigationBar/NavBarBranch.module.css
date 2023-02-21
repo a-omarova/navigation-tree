@@ -27,10 +27,7 @@
 .linkTitle {
   display: block;
   padding-left: 8px;
-}
-
-.link.open {
-
+  position: relative;
 }
 
 .list {
@@ -39,5 +36,46 @@
 }
 
 .open + .list {
-  max-height: calc(var(--list-length) * 48px);
+  max-height: none;
+}
+
+.dot, .dot:before, .dot:after {
+  position: absolute;
+  right: -20px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(107, 107, 107, 0.2);
+}
+
+.dot:before, .dot:after {
+  content: "";
+}
+
+.dot:before {
+  right: 6px;
+  transition: right .3s ease-out;
+  animation: dot-blink 1.4s infinite ease-in-out;
+}
+
+.dot {
+  top: 6px;
+  animation: dot-blink 1.4s infinite ease-in-out;
+  animation-delay: 0.3s;
+}
+
+.dot:after {
+  left: 6px;
+  transition: left .3s ease-out;
+  animation: dot-blink 1.4s infinite ease-in-out;
+  animation-delay: 0.6s;
+}
+
+@keyframes dot-blink {
+  0%, 80%, 100% {
+    background-color: rgba(107, 107, 107, 0.2);
+  }
+  40% {
+    background-color: rgba(107, 107, 107, 0.01);
+  }
 }
