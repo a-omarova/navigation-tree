@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense, useCallback, useState } from 'react'
 import styles from './NavBarBranch.module.css'
 import { Icon } from '@/components/Icon/Icon'
 import Link from 'next/link'
@@ -17,24 +17,38 @@ type BranchProps = {
 }
 
 export const NavBarBranch = ({node, onGetNode}: BranchProps) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const onClickLink = useCallback((id: string) => {
+    onGetNode && onGetNode(id)
+    setIsOpen(!isOpen)
+  }, [isOpen, onGetNode])
+
+  const linkClassNames = [styles.link, isOpen ? styles.open : ''].join(' ')
+
   return (
-    <li>
+    <li className={styles.listItem}>
       <Link
-        className={styles.link}
+        className={linkClassNames}
         style={{'--lvl-padding': `${node.level} * 16px`} as React.CSSProperties}
         href=""
-        onClick={() => onGetNode && onGetNode(node.id)}
+        onClick={() => onClickLink(node.id)}
       >
         {node.hasChildren && <Icon name="triangle" className={styles.linkIcon}/>}
-        {node.id}
+        <span className={styles.linkTitle}>{node.title}</span>
       </Link>
-      {node.pages && (
-        <ul>
-          {node.pages.map((page: NodeProps) => (
-            <NavBarBranch key={page.id} node={page} onGetNode={onGetNode}/>
-          ))}
-        </ul>
-      )}
+      <Suspense fallback={<span>...</span>}>
+        {node.pages && (
+          <ul
+            className={styles.list}
+            style={{'--list-length': node.pages.length} as React.CSSProperties}
+          >
+            {node.pages.map((page: NodeProps) => (
+              <NavBarBranch key={page.id} node={page} onGetNode={onGetNode}/>
+            ))}
+          </ul>
+        )}
+      </Suspense>
     </li>
   )
 }

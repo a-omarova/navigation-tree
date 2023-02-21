@@ -1,8 +1,14 @@
 .link {
   display: flex;
   align-items: center;
-  padding: 8px 32px 8px calc(var(--lvl-padding) + 32px);
+  padding: 8px 32px 8px calc(var(--lvl-padding) + 48px);
   cursor: pointer;
+  z-index: 1;
+  position: relative;
+}
+
+.listItem {
+  overflow: hidden;
 }
 
 .link:hover {
@@ -10,5 +16,28 @@
 }
 
 .linkIcon {
-  padding-right: 8px;
+  margin-left: -24px;
+  transition: transform ease-out 0.2s;
+}
+
+.open .linkIcon {
+  transform: rotate(90deg);
+}
+
+.linkTitle {
+  display: block;
+  padding-left: 8px;
+}
+
+.link.open {
+
+}
+
+.list {
+  max-height: 0;
+  transition: max-height ease-out 0.4s;
+}
+
+.open + .list {
+  max-height: calc(var(--list-length) * 48px);
 }
