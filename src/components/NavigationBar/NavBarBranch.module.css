@@ -16,7 +16,9 @@
 }
 
 .linkIcon {
-  margin-left: -16px;
+  position: absolute;
+  top: 0;
+  left: -18px;
   transition: transform ease-out 0.2s;
 }
 
@@ -25,18 +27,8 @@
 }
 
 .linkTitle {
-  display: block;
   padding-left: 8px;
   position: relative;
-}
-
-.list {
-  max-height: 0;
-  transition: max-height ease-out 0.4s;
-}
-
-.open + .list {
-  max-height: none;
 }
 
 .dot, .dot:before, .dot:after {

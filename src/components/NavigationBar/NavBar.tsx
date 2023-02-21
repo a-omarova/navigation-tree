@@ -15,14 +15,12 @@ type NodeProps = {
 type TreeSearchType = {
   node: NodeProps,
   id: string,
-  data: NodeProps[]
+  data?: NodeProps[]
 }
 
 export const NavBar = () => {
   const [data, setData] = useState<NodeProps[] | []>([])
   const [idsPendingData, setIdsPendingData] = useState<string[]>([])
-
-  console.log(idsPendingData)
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/data/top-level')
@@ -34,12 +32,17 @@ export const NavBar = () => {
 
   }, [])
 
-  const treeSearch = useCallback(({node, id, data}: TreeSearchType) => {
-    if (node.id === id && !node.pages) {
-      node.pages = data
+  const addDeleteTreeNode = useCallback(({node, id, data}: TreeSearchType) => {
+    if (node.id === id) {
+      // if has response data
+      if (data && !node.pages) {
+        node.pages = data
+      } else { // delete if hasn't
+        delete node.pages
+      }
     } else if (node.pages) {
       node.pages.forEach((page) => {
-        treeSearch({node: page, id, data})
+        addDeleteTreeNode({node: page, id, data})
       })
     }
   }, [])
@@ -55,31 +58,37 @@ export const NavBar = () => {
 
     await axios.get(`http://localhost:3000/api/data/${id}`)
       .then(function (response) {
-
         setTimeout(() => {
           setIdsPendingData((prevData) => deletePendingData(id, prevData))
           newData.forEach((node) => {
-            treeSearch({node, id, data: response.data})
+            addDeleteTreeNode({node, id, data: response.data})
           })
-
-          setData(newData)
+          setData(newData) // ?
         }, 1000)
       })
       .catch(() => {
         setIdsPendingData((prevData) => deletePendingData(id, prevData))
       })
-  }, [data, idsPendingData, treeSearch])
+  }, [data, idsPendingData, addDeleteTreeNode])
+
+  const onDeleteNode = useCallback((id: string) => {
+    const newData = [...data]
+    newData.forEach((node) => {
+      addDeleteTreeNode({node, id})
+    })
+  }, [addDeleteTreeNode, data])
 
   return (
     <nav className={styles.root}>
       {data.length !== 0
         ? (
           <ul>
-            {data && data.map(topLvlNode => (
+            {data.map(topLvlNode => (
               <NavBarBranch
                 key={topLvlNode.id}
                 node={topLvlNode}
                 onGetNode={onGetNode}
+                onDeleteNode={onDeleteNode}
                 idsPendingData={idsPendingData}
               />
             ))}
@@ -88,10 +97,7 @@ export const NavBar = () => {
         : (
           <Icon name="navPreload" className={styles.preload}/>
         )
-
       }
-
     </nav>
-
   )
 }
