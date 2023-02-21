@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import styles from './NavBarBranch.module.css'
 import { Icon } from '@/components/Icon/Icon'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 type NodeProps = {
   id: string,
@@ -13,41 +14,46 @@ type NodeProps = {
 
 type BranchProps = {
   node: NodeProps,
-  onGetNode: (id: string) => void
+  onGetNode: (id: string, hasChildren: boolean) => void
   onDeleteNode: (id: string) => void
   idsPendingData: string[]
 }
 
 export const NavBarBranch = ({node, onGetNode, onDeleteNode, idsPendingData}: BranchProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isNodeOpen, setNodeIsOpen] = useState(false)
+  const router = useRouter()
 
-  const onClickLink = useCallback((id: string) => {
-    if (!isOpen) {
-      onGetNode(id)
+  const onClickLink = useCallback((id: string, hasChildren: boolean) => {
+    if (!isNodeOpen) {
+      onGetNode(id, hasChildren)
     } else {
       onDeleteNode(id)
     }
-    setIsOpen(!isOpen)
-  }, [isOpen, onGetNode, onDeleteNode])
+    setNodeIsOpen(!isNodeOpen)
+  }, [isNodeOpen, onGetNode, onDeleteNode])
 
-  const linkClassNames = [styles.link, isOpen && node.pages ? styles.open : ''].join(' ')
+  const linkContainerClassNames = [
+    styles.listContainer,
+    node.level > 0 ? styles.listContainerSubLvl : '',
+    router.asPath === `/#${node.id}` ? styles.listContainerActive : ''
+  ].join(' ')
+  const linkClassNames = [styles.link, isNodeOpen && node.pages ? styles.open : ''].join(' ')
   const findPendingId: string | undefined = idsPendingData.find((id) => node.id === id)
 
   return (
     <>
-      <li className={styles.listItem}>
+      <li className={linkContainerClassNames}>
         <Link
           className={linkClassNames}
-          style={{'--lvl-padding': `${node.level} * 16px`} as React.CSSProperties}
-          href=""
-          onClick={() => onClickLink(node.id)}
+          style={{'--lvl': `${node.level}`} as React.CSSProperties}
+          href={`#${node.id}`}
+          onClick={() => onClickLink(node.id, node.hasChildren)}
         >
           <div className={styles.linkTitle}>
             {node.hasChildren && <Icon name="triangle" className={styles.linkIcon}/>}
             {node.title}
             {findPendingId && <span className={styles.dot}/>}
           </div>
-
         </Link>
       </li>
       {node.pages && node.pages.map((page: NodeProps) => (

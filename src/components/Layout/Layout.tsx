@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import Head from 'next/head';
-import { Footer } from '../Footer/Footer';
 import { Header } from '../Header/Header';
 import styles from './Layout.module.css';
 
@@ -17,7 +16,6 @@ export const Layout: React.FC<Props> = ({ children }) => {
       </Head>
       <Header/>
       <main className={styles.main}>{children}</main>
-      <Footer/>
     </div>
   );
 };

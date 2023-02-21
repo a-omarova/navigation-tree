@@ -1,18 +1,23 @@
+.listContainerSubLvl {
+  background: var(--color-lvl-background);
+}
+
 .link {
   display: flex;
   align-items: center;
-  padding: 8px 32px 8px calc(var(--lvl-padding) + 48px);
+  padding: 8px 32px 8px calc(var(--lvl) * 16px + 48px);
   cursor: pointer;
   z-index: 1;
   position: relative;
 }
 
-.listItem {
-  overflow: hidden;
-}
-
 .link:hover {
   background: var(--color-lvl-background-hover);
+}
+
+.listContainerActive {
+  background: var(--color-blue);
+  color: white;
 }
 
 .linkIcon {
@@ -37,7 +42,7 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: rgba(107, 107, 107, 0.2);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .dot:before, .dot:after {
@@ -65,9 +70,9 @@
 
 @keyframes dot-blink {
   0%, 80%, 100% {
-    background-color: rgba(107, 107, 107, 0.2);
+    background-color:  rgba(255, 255, 255, 0.5);
   }
   40% {
-    background-color: rgba(107, 107, 107, 0.01);
+    background-color:  rgba(255, 255, 255, 0.2);
   }
 }

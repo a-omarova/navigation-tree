@@ -47,7 +47,10 @@ export const NavBar = () => {
     }
   }, [])
 
-  const onGetNode = useCallback(async (id: string) => {
+  const onGetNode = useCallback(async (id: string, hasChildren: boolean) => {
+
+    if (!hasChildren) return null
+
     const newData = [...data]
     const dataAlreadyPending = idsPendingData.find((dataId) => dataId === id)
     const deletePendingData = (deleteId: string, currentData: string[]) => currentData.filter((dataId) => dataId !== deleteId)
