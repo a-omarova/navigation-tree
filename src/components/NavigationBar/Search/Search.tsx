@@ -10,15 +10,21 @@ type Search = {
 export const Search = ({search, onChangeSearch, onClearSearch}: Search) => {
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-test="searchContainer">
       <input
         type="text"
+        data-test="searchInput"
         value={search}
         placeholder="Search"
         className={styles.search}
         onChange={(e) => onChangeSearch(e)}
       />
-      <button type="button" className={styles.clearBtn} onClick={onClearSearch}>
+      <button
+        type="button"
+        data-test="searchClearBtn"
+        className={styles.clearBtn}
+        onClick={onClearSearch}
+      >
         <Icon name="close" onClick={onClearSearch}/>
       </button>
     </div>

@@ -29,7 +29,7 @@ export const NavBarBranch = ({node, onGetNode, onDeleteNode, idsPendingData}: Br
     } else {
       onDeleteNode(id)
     }
-    setNodeIsOpen(!isNodeOpen)
+    setNodeIsOpen(isNodeOpen => !isNodeOpen)
   }, [isNodeOpen, onGetNode, onDeleteNode])
 
   const linkContainerClassNames = [
@@ -42,7 +42,12 @@ export const NavBarBranch = ({node, onGetNode, onDeleteNode, idsPendingData}: Br
 
   return (
     <>
-      <li className={linkContainerClassNames}>
+      <li
+        className={linkContainerClassNames}
+        data-test-lvl={node.level}
+        data-test-open={isNodeOpen}
+        data-test-hasChildren={node.hasChildren}
+      >
         <Link
           className={linkClassNames}
           style={{'--lvl': `${node.level}`} as React.CSSProperties}
@@ -50,9 +55,11 @@ export const NavBarBranch = ({node, onGetNode, onDeleteNode, idsPendingData}: Br
           onClick={() => onClickLink(node.id, node.hasChildren)}
         >
           <div className={styles.linkTitle}>
-            {node.hasChildren && <Icon name="triangle" className={styles.linkIcon}/>}
+            {node.hasChildren && (
+              <Icon name="triangle" className={styles.linkIcon}/>
+            )}
             {node.title}
-            {findPendingId && <span className={styles.dot}/>}
+            {findPendingId && <span className={styles.dot} data-test-loading="navBarNodeLoading"/>}
           </div>
         </Link>
       </li>

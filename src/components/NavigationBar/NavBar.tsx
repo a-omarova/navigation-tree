@@ -113,7 +113,7 @@ export const NavBar = () => {
   const onClearSearch = useCallback(() => {
     setSearch('')
     getTopLvlData()
-  }, [])
+  }, [getTopLvlData])
 
   return (
     <nav className={styles.root}>
@@ -126,7 +126,7 @@ export const NavBar = () => {
         {isPendingSearch && <div className={styles.searchTitle}>Searching {search}...</div>}
       </div>
       {data.length !== 0 && (
-        <ul>
+        <ul data-test="navBar">
           {data.map(topLvlNode => (
             <NavBarBranch
               key={topLvlNode.id}
@@ -139,7 +139,12 @@ export const NavBar = () => {
         </ul>
       )}
       {data.length === 0 && search.length === 0 && (
-        <Icon name="navPreload" className={styles.preload}/>
+        <div data-test-preload="navBarPreload">
+          <Icon
+            name="navPreload"
+            className={styles.preload}
+          />
+        </div>
       )}
     </nav>
   )
