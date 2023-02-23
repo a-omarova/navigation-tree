@@ -5,6 +5,7 @@ import Home from '../../../public/icons/home.svg'
 import Triangle from '../../../public/icons/triangle.svg'
 import NavPreload from '../../../public/icons/nav-preload.svg'
 import Close from '../../../public/icons/close.svg'
+import Spinner from '../../../public/icons/spinner.svg'
 
 
 const iconsList = {
@@ -13,7 +14,8 @@ const iconsList = {
   'home': Home,
   'triangle': Triangle,
   'navPreload': NavPreload,
-  'close': Close
+  'close': Close,
+  'spinner': Spinner,
 }
 
 export type IconName = keyof typeof iconsList;

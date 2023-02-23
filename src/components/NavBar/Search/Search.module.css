@@ -22,3 +22,36 @@
   top: 0;
   right: 0;
 }
+
+.spinner {
+  color: var(--color-clear-icon);
+  animation: spin 1s linear infinite;
+  position: absolute;
+  top: 6px;
+  left: -24px;
+}
+
+.text {
+  padding-top: 16px;
+}
+
+.textTitle {
+  padding-top: 24px;
+  text-align: center;
+}
+
+
+.searchValue {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

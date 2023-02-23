@@ -56,7 +56,7 @@ app.prepare()
       const searchStr = req.params.str
 
       keys.forEach((key) => {
-        if (data.entities.pages[key].title && data.entities.pages[key].title.includes(searchStr)) {
+        if (data.entities.pages[key].title.toLocaleLowerCase().includes(searchStr)) {
           const section = data.entities.pages[key]
           nodeList.push({
             id: key,
@@ -68,6 +68,22 @@ app.prepare()
       })
 
       return res.send(nodeList)
+    })
+
+    server.get('/api/search/', (req, res) => {
+      const nodeList = []
+
+      data.topLevelIds.forEach((id) => {
+        const section = data.entities.pages[id]
+        nodeList.push({
+          id: id,
+          title: section.title,
+          level: section.level,
+          hasChildren: section.pages && section.pages.length !== 0
+        })
+      })
+
+      res.send(nodeList)
     })
 
     server.get('*', (req, res) => {

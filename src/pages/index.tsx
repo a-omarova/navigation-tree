@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import React, { Suspense } from 'react'
-import { NavBar } from '@/components/NavigationBar/NavBar'
+import React from 'react'
+import { NavBar } from '@/components/NavBar/NavBar'
 
 export default function Home() {
   return (
@@ -11,9 +11,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="icon" href="/favicon.ico"/>
       </Head>
-      <Suspense fallback={<h2>🌀 Loading...</h2>}>
-        <NavBar />
-      </Suspense>
+      <h1 className="visually-hidden">Navigation tree bar </h1>
+      <NavBar/>
     </>
   )
 }

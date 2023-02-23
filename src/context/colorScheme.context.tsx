@@ -13,11 +13,6 @@ type ColorSchemeContext = {
 const useColorScheme = (): ColorSchemeContext => {
   const [isDark, setIsDark] = useState(false)
 
-  // useEffect(() => {
-  //   // const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  //   setIsDark(systemPrefersDark)
-  // }, [])
-
   useEffect(() => {
     document.body.setAttribute('theme', isDark ? 'dark' : 'light')
   }, [isDark])
@@ -30,8 +25,7 @@ const useColorScheme = (): ColorSchemeContext => {
 
 export const ColorSchemeContext = createContext<ColorSchemeContext>({
   isDark: false,
-  setIsDark: () => {
-  }
+  setIsDark: () => {}
 })
 
 export const ColorSchemeProvider: React.FC<ColorSchemeProps> = ({children}) => {

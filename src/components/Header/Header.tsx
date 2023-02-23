@@ -14,7 +14,7 @@ export const Header = () => {
         <Icon name="home" className={styles.homeIcon}/>
       </Link>
       <label className={styles.themeSwitchLabel}>
-        <input type="checkbox" className={styles.themeSwitchCheckbox} checked={isDark} onChange={toggleTheme}/>
+        <input type="checkbox" className="visually-hidden" checked={isDark} onChange={toggleTheme}/>
         <div className={styles.themeIcons}>
           <Icon name="light" className={styles.lightThemeIcon}/>
           <Icon name="dark" className={styles.darkThemeIcon}/>
