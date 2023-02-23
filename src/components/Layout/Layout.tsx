@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react'
 import Head from 'next/head'
 import { Header } from '../Header/Header'
 import styles from './Layout.module.css'
-import { NavBarDataProvider } from '@/context/navBarData.context'
+import { StoreProvider } from '@/context/store.context'
 
 interface Props {
   children?: ReactNode;
@@ -16,9 +16,9 @@ export const Layout: React.FC<Props> = ({children}) => {
         <link rel="icon" href="/public/favicon.ico"/>
       </Head>
       <Header/>
-      <NavBarDataProvider>
+      <StoreProvider>
         <main className={styles.main}>{children}</main>
-      </NavBarDataProvider>
+      </StoreProvider>
     </div>
   )
 }

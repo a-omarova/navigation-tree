@@ -1,23 +1,25 @@
 import React, { createContext, ReactNode } from 'react'
 import { NodeProps } from '@/types'
 
-interface NavBarDataProps {
+interface StoreProps {
   children?: ReactNode
 }
 
 interface DataState {
   data: NodeProps[] | [],
-  search: string
+  search: string,
+  cache: NodeProps[] | [],
 }
 
 interface DataAction {
-  type: 'SET_DATA' | 'SET_SEARCH';
+  type: 'SET_DATA' | 'SET_SEARCH' | 'SET_CACHE';
   payload: DataState;
 }
 
 const initialState = {
   data: [],
-  search: ''
+  search: '',
+  cache: []
 }
 const reducer = (state: DataState, action: DataAction) => {
   switch (action.type) {
@@ -25,6 +27,11 @@ const reducer = (state: DataState, action: DataAction) => {
       return {
         ...state,
         data: action.payload.data
+      }
+    case 'SET_CACHE':
+      return {
+        ...state,
+        cache: action.payload.cache
       }
     case 'SET_SEARCH':
       return {
@@ -36,7 +43,7 @@ const reducer = (state: DataState, action: DataAction) => {
   }
 }
 
-export const NavBarDataContext = createContext<{
+export const StoreContext = createContext<{
   state: DataState;
   dispatch: React.Dispatch<any>;
 }>({
@@ -44,7 +51,7 @@ export const NavBarDataContext = createContext<{
   dispatch: () => null
 })
 
-export const NavBarDataProvider: React.FC<NavBarDataProps> = ({children}) => {
+export const StoreProvider: React.FC<StoreProps> = ({children}) => {
   const [state, dispatch] = React.useReducer(reducer, initialState)
-  return <NavBarDataContext.Provider value={{state, dispatch}}>{children}</NavBarDataContext.Provider>
+  return <StoreContext.Provider value={{state, dispatch}}>{children}</StoreContext.Provider>
 }

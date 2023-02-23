@@ -24,12 +24,15 @@ export const NavBarBranch = ({node, onGetNode, onDeleteNode, idsPendingData}: Br
   const router = useRouter()
 
   const onClickLink = useCallback((id: string, hasChildren: boolean) => {
+    if (!hasChildren) return
+
     if (!isNodeOpen) {
       onGetNode(id, hasChildren)
+      setNodeIsOpen(true)
     } else {
       onDeleteNode(id)
+      setNodeIsOpen(false)
     }
-    setNodeIsOpen(isNodeOpen => !isNodeOpen)
   }, [isNodeOpen, onGetNode, onDeleteNode])
 
   const linkContainerClassNames = [
@@ -46,7 +49,7 @@ export const NavBarBranch = ({node, onGetNode, onDeleteNode, idsPendingData}: Br
         className={linkContainerClassNames}
         data-test-lvl={node.level}
         data-test-open={isNodeOpen}
-        data-test-hasChildren={node.hasChildren}
+        data-test-haschildren={node.hasChildren}
       >
         <Link
           className={linkClassNames}

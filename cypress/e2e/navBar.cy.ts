@@ -37,7 +37,7 @@ describe('navigation bar', () => {
 
     cy
       .get(`[data-test-lvl=0]`)
-      .should('have.attr', 'data-test-hasChildren', 'true')
+      .should('have.attr', 'data-test-haschildren', 'true')
       .next()
       .should('have.attr', 'data-test-lvl', '1')
   })

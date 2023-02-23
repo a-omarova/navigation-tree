@@ -2,11 +2,11 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styles from './Search.module.css'
 import { Icon } from '@/components/Icon/Icon'
 import { facts } from './facts'
-import { NavBarDataContext } from '@/context/navBarData.context'
+import { StoreContext } from '@/context/store.context'
 import axios from 'axios'
 
 export const Search = () => {
-  const {state, dispatch} = useContext(NavBarDataContext)
+  const {state, dispatch} = useContext(StoreContext)
   const [isPending, setIsPending] = useState<boolean>(false)
 
   const getSearchData = useCallback((value: string) => {
@@ -44,13 +44,9 @@ export const Search = () => {
     })
   }, [dispatch])
 
-  // useEffect(() => {
-  //   if (state.search.length !== 0) {
-  //
-  //   }
-  // }, [getSearchData, state.search])
-
   useEffect(() => {
+    if (state.search.length === 0) return
+
     const delayDebounceFn = setTimeout(() => {
       getSearchData(state.search)
     }, 600)
