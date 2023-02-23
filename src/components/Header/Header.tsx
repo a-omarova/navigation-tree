@@ -13,9 +13,9 @@ export const Header = () => {
       <Link href="https://www.jetbrains.com/">
         <Icon name="home" className={styles.homeIcon}/>
       </Link>
-      <label className={styles.themeSwitchLabel}>
+      <label className={styles.themeSwitchLabel} data-test-theme-dark={isDark}>
         <input type="checkbox" className="visually-hidden" checked={isDark} onChange={toggleTheme}/>
-        <div className={styles.themeIcons}>
+        <div className={styles.themeIcons} >
           <Icon name="light" className={styles.lightThemeIcon}/>
           <Icon name="dark" className={styles.darkThemeIcon}/>
         </div>

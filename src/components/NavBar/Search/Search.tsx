@@ -8,6 +8,7 @@ import axios from 'axios'
 export const Search = () => {
   const {state, dispatch} = useContext(StoreContext)
   const [isPending, setIsPending] = useState<boolean>(false)
+  const [fact, setFact] = useState<string>('')
 
   const getSearchData = useCallback((value: string) => {
     axios.get(`http://localhost:3000/api/search/${value}`)
@@ -49,16 +50,17 @@ export const Search = () => {
 
     const delayDebounceFn = setTimeout(() => {
       getSearchData(state.search)
+      setFact(facts[generateRandomInRange(0, facts.length - 1)])
     }, 600)
 
     return () => clearTimeout(delayDebounceFn)
   }, [getSearchData, state.search])
 
   return (
-    <div className={styles.container} data-test="searchContainer">
+    <div className={styles.container} data-test-search="container">
       <input
         type="text"
-        data-test="searchInput"
+        data-test-search="input"
         value={state.search}
         placeholder="Search"
         className={styles.search}
@@ -67,22 +69,22 @@ export const Search = () => {
       {state.search.length !== 0 && (
         <button
           type="button"
-          data-test="searchClearBtn"
+          data-test-search="clearButton"
           className={styles.clearBtn}
           onClick={onClearSearch}
         >
           <Icon name="close" onClick={onClearSearch}/>
         </button>
       )}
-      {isPending && <Icon name="spinner" className={styles.spinner}/>}
+      {isPending && <Icon name="spinner" className={styles.spinner} data-test-search="spinner"/>}
       {state.data.length === 0 && state.search.length !== 0 && (
-        <>
+        <div data-test-search="emptyText">
           <p className={styles.text}>
-            Sorry, can&apos;t find <span className={styles.searchValue}>{state.search}</span>
+            Sorry, can&apos;t find anything
           </p>
           <p className={styles.textTitle}>But here some interesting fact:</p>
-          <p className={styles.facts}>{facts[generateRandomInRange(0, facts.length - 1)]}</p>
-        </>
+          <p className={styles.facts}>{fact}</p>
+        </div>
       )}
     </div>
   )

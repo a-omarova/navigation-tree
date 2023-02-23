@@ -13,7 +13,7 @@ describe('navigation bar', () => {
 
   it('is node with children open after click', () => {
     cy
-      .get(`[data-test-open=false]`)
+      .get(`[data-test-haschildren=true]`)
       .each((elem) => {
         cy.wrap(elem).click()
 
@@ -52,9 +52,6 @@ describe('navigation bar', () => {
 
     cy.get(`[data-test-loading=navBarNodeLoading]`).should('be.visible');
   })
-
-
-
 })
 
 export {}

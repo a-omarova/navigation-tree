@@ -14,6 +14,11 @@ const useColorScheme = (): ColorSchemeContext => {
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    setIsDark(systemPrefersDark)
+  }, [])
+
+  useEffect(() => {
     document.body.setAttribute('theme', isDark ? 'dark' : 'light')
   }, [isDark])
 

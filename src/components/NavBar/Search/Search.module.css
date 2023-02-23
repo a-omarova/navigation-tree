@@ -40,13 +40,6 @@
   text-align: center;
 }
 
-
-.searchValue {
-  font-weight: 700;
-  font-size: 14px;
-}
-
-
 @keyframes spin {
   0% {
     transform: rotate(0deg);
