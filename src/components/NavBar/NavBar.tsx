@@ -5,12 +5,16 @@ import { NavBarBranch } from '@/components/NavBar/NavBarBranch'
 import { Icon } from '../Icon/Icon'
 import { Search } from '@/components/NavBar/Search/Search'
 import { StoreContext } from '@/context/store.context'
-import { NodeProps, TreeSearchType } from '@/types'
+import { NodeProps } from '@/types'
+import useCache from '@/hooks/useCache'
+import useTree from '@/hooks/useTree'
 
 
 export const NavBar = () => {
   const {state, dispatch} = useContext(StoreContext)
   const [idsPendingData, setIdsPendingData] = useState<string[]>([])
+  const {addToCache, findInCache} = useCache();
+  const {addNode, deleteNode} = useTree();
 
   const getTopLvlData = useCallback(() => {
     axios.get('http://localhost:3000/api/data/top-level')
@@ -34,49 +38,23 @@ export const NavBar = () => {
     }
   }, [getTopLvlData, state.search.length])
 
-  const addTreeNode = useCallback(({node, id, data}: TreeSearchType) => {
-    if (node.id === id && !node.pages) {
-      node.pages = data
-    } else if (node.pages) {
-      node.pages.forEach((page) => {
-        addTreeNode({node: page, id, data})
-      })
-    }
-  }, [])
-
-  const deleteTreeNode = useCallback(({node, id}: TreeSearchType) => {
-    if (node.id === id) {
-      delete node.pages
-    } else if (node.pages) {
-      node.pages.forEach((page) => {
-        deleteTreeNode({node: page, id})
-      })
-    }
-  }, [])
-
-  const findNodeInCache = useCallback((node: NodeProps, id: string) => {
-    if (node.id === id) {
-      console.log('node.pages', node.pages)
-      return node.pages
-    } else if (node.pages) {
-      node.pages.forEach((page) => {
-        findNodeInCache(page, id)
-      })
-    }
-  }, [])
-
   const onGetNode = useCallback(async (id: string) => {
     const newData = [...state.data]
-    const cache = [...state.cache]
-    let dataFromCache;
+    let dataFromCache: NodeProps | undefined;
 
-    console.log('cache', cache.length)
-
-    cache.forEach((node) => {
-      dataFromCache = findNodeInCache(node, id)
+    state.cache.forEach((node) => {
+      if (findInCache({node, id})) {
+        dataFromCache = findInCache({node, id})
+      }
     })
 
     if (dataFromCache) {
+      newData.forEach((node) => {
+        if (dataFromCache) {
+          addNode({node, id, data: dataFromCache.pages})
+        }
+      })
+
       dispatch({
         type: 'SET_DATA',
         payload: {data: newData}
@@ -97,29 +75,26 @@ export const NavBar = () => {
         setTimeout(() => {
           setIdsPendingData((prevData) => deletePendingData(id, prevData))
           newData.forEach((node) => {
-            addTreeNode({node, id, data: response.data})
+            addNode({node, id, data: response.data})
           })
           dispatch({
             type: 'SET_DATA',
             payload: {data: newData}
           })
-          dispatch({
-            type: 'SET_CACHE',
-            payload: {cache: new Set([...state.cache, ...newData, ...state.cache])}
-          })
+          addToCache(newData);
         }, 1000)
       })
       .catch(() => {
         setIdsPendingData((prevData) => deletePendingData(id, prevData))
       })
-  }, [state.data, state.cache, findNodeInCache, idsPendingData, addTreeNode, dispatch])
+  }, [state.data, state.cache, idsPendingData, findInCache, dispatch, addNode, addToCache])
 
   const onDeleteNode = useCallback((id: string) => {
     const newData = [...state.data]
     newData.forEach((node) => {
-      deleteTreeNode({node, id})
+      deleteNode({node, id})
     })
-  }, [deleteTreeNode, state.data])
+  }, [deleteNode, state.data])
 
   return (
     <nav className={styles.root}>
