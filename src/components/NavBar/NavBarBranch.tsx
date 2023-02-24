@@ -3,6 +3,7 @@ import styles from './NavBarBranch.module.css'
 import { Icon } from '@/components/Icon/Icon'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import debounce from 'lodash.debounce'
 
 type NodeProps = {
   id: string,
@@ -24,15 +25,21 @@ export const NavBarBranch = ({node, onGetNode, onDeleteNode, idsPendingData}: Br
   const router = useRouter()
 
   const onClickLink = useCallback((id: string, hasChildren: boolean) => {
-    if (!hasChildren) return
+    return debounce(
+      () => {
+        if (!hasChildren) return
 
-    if (!isNodeOpen) {
-      onGetNode(id, hasChildren)
-      setNodeIsOpen(true)
-    } else {
-      onDeleteNode(id)
-      setNodeIsOpen(false)
-    }
+        if (!isNodeOpen) {
+          onGetNode(id, hasChildren)
+          setNodeIsOpen(true)
+        } else {
+          onDeleteNode(id)
+          setNodeIsOpen(false)
+        }
+      },
+      1000,
+      {leading: true, maxWait: 100, trailing: false}
+    )()
   }, [isNodeOpen, onGetNode, onDeleteNode])
 
   const linkContainerClassNames = [
@@ -59,10 +66,10 @@ export const NavBarBranch = ({node, onGetNode, onDeleteNode, idsPendingData}: Br
         >
           <div className={styles.linkTitle}>
             {node.hasChildren && (
-              <Icon name="triangle" className={styles.linkIcon}/>
+              <Icon name="triangle" className={styles.linkIcon} aria-hidden={true}/>
             )}
             {node.title}
-            {findPendingId && <span className={styles.dot} data-test-loading="navBarNodeLoading"/>}
+            {findPendingId && <span className={styles.dot} data-test-loading="navBarNodeLoading" aria-hidden={true}/>}
           </div>
         </Link>
       </li>

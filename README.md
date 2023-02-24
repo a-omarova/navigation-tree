@@ -34,8 +34,6 @@ As a testing tool, I used Cypress. For run tests:
 npm run cypress
 ```
 
-P.S. sometimes test failed because setTimeout. Just rerun tests
-
 ## What is implemented
 
 - Data in JSON is loaded asynchronously from a local web server

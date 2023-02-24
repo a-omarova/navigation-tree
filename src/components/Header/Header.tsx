@@ -11,10 +11,11 @@ export const Header = () => {
   return (
     <header className={styles.root}>
       <Link href="https://www.jetbrains.com/">
-        <Icon name="home" className={styles.homeIcon}/>
+        <span className="visually-hidden">Home Page Link</span>
+        <Icon name="home" className={styles.homeIcon} aria-hidden={true}/>
       </Link>
-      <label className={styles.themeSwitchLabel} data-test-theme-dark={isDark}>
-        <input type="checkbox" className="visually-hidden" checked={isDark} onChange={toggleTheme}/>
+      <label className={styles.themeSwitchLabel} data-test-theme-dark={isDark} aria-hidden={true}>
+        <input type="checkbox" className={`${styles.themeSwitchCheckbox} visually-hidden`} checked={isDark} onChange={toggleTheme}/>
         <div className={styles.themeIcons} >
           <Icon name="light" className={styles.lightThemeIcon}/>
           <Icon name="dark" className={styles.darkThemeIcon}/>

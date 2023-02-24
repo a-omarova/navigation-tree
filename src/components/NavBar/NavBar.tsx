@@ -8,6 +8,7 @@ import { StoreContext } from '@/context/store.context'
 import { NodeProps } from '@/types'
 import useCache from '@/hooks/useCache'
 import useTree from '@/hooks/useTree'
+import cloneDeep from 'lodash.clonedeep'
 
 
 export const NavBar = () => {
@@ -24,13 +25,13 @@ export const NavBar = () => {
             type: "SET_DATA",
             payload: {data: response.data}
           })
+          dispatch({
+            type: "SET_CACHE",
+            payload: {cache: response.data}
+          })
         }, 1000)
       })
   }, [dispatch])
-
-  useEffect(() => {
-    getTopLvlData()
-  }, [getTopLvlData])
 
   useEffect(() => {
     if (state.search.length === 0) {
@@ -39,14 +40,8 @@ export const NavBar = () => {
   }, [getTopLvlData, state.search.length])
 
   const onGetNode = useCallback(async (id: string) => {
-    const newData = [...state.data]
-    let dataFromCache: NodeProps | undefined;
-
-    state.cache.forEach((node) => {
-      if (findInCache({node, id})) {
-        dataFromCache = findInCache({node, id})
-      }
-    })
+    const newData = cloneDeep(state.data)
+    let dataFromCache: NodeProps | undefined = findInCache(id);
 
     if (dataFromCache) {
       newData.forEach((node) => {
@@ -81,19 +76,20 @@ export const NavBar = () => {
             type: 'SET_DATA',
             payload: {data: newData}
           })
-          addToCache(newData);
+          addToCache(id, response.data);
         }, 1000)
       })
       .catch(() => {
         setIdsPendingData((prevData) => deletePendingData(id, prevData))
       })
-  }, [state.data, state.cache, idsPendingData, findInCache, dispatch, addNode, addToCache])
+  }, [state.data, findInCache, idsPendingData, dispatch, addNode, addToCache])
 
   const onDeleteNode = useCallback((id: string) => {
     const newData = [...state.data]
     newData.forEach((node) => {
       deleteNode({node, id})
     })
+
   }, [deleteNode, state.data])
 
   return (
@@ -115,10 +111,12 @@ export const NavBar = () => {
         </ul>
       )}
       {state.data.length === 0 && state.search.length === 0 && (
-        <div data-test-preload="navBarPreload">
+        <div data-test-preload="navBarPreload" >
+          <span className="visually-hidden">Loading data</span>
           <Icon
             name="navPreload"
             className={styles.preload}
+            aria-hidden={true}
           />
         </div>
       )}

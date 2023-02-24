@@ -73,7 +73,8 @@ export const Search = () => {
           className={styles.clearBtn}
           onClick={onClearSearch}
         >
-          <Icon name="close" onClick={onClearSearch}/>
+          <Icon name="close" onClick={onClearSearch} aria-hidden={true}/>
+          <span className="visually-hidden">Clear search</span>
         </button>
       )}
       {isPending && <Icon name="spinner" className={styles.spinner} data-test-search="spinner"/>}
