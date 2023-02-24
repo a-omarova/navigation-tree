@@ -29,20 +29,20 @@ Colors for the project placed in [`styles/global`], created as CSS Variables.
 
 As a testing tool, I used Cypress. For run tests:
 
-
 ```bash
 npm run cypress
 ```
 
 ## What is implemented
 
-- Data in JSON is loaded asynchronously from a local web server
+- Data in JSON is loaded asynchronously from a local web server.
 - The user can see the “preload” until the data is rendered.
 - When the user clicks on the root element of the branch or the arrow next to it, the nested list collapses/expands.
 - Smooth animations for changing colors and changing the position of the icon.
-- E2e tests for navigation
-- Selecting the active item by ID
-- Filtering items (Search)
-- While waiting for rendering, the loading indicator is displayed
-- The results of the search show after the user stop typing
-- Small easter egg in search
+- E2e tests for navigation.
+- Request data by ID.
+- Cache for data.
+- Filtering items (Search).
+- While waiting for rendering, the loading indicator is displayed.
+- The results of the search show after the user stop typing.
+- Small easter egg in search.
