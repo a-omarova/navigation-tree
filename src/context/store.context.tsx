@@ -1,25 +1,29 @@
 import React, { createContext, ReactNode } from 'react'
-import { NodeProps } from '@/types'
+import { DataType } from '@/types'
 
 interface StoreProps {
   children?: ReactNode
 }
 
 interface DataState {
-  data: NodeProps[] | [],
-  search: string,
-  cache: NodeProps[] | [],
+  data: DataType | null,
+  searchValue: string,
+  searchIds: string[],
+  listOfNodes: string[],
+  listOfAllNodesId: string[]
 }
 
 interface DataAction {
-  type: 'SET_DATA' | 'SET_SEARCH' | 'SET_CACHE';
+  type: 'SET_DATA' | 'SET_LIST_OF_NODES' | 'SET_All_NODE_IDS' | 'SET_SEARCH_VALUE' | 'SET_SEARCH_IDS';
   payload: DataState;
 }
 
 const initialState = {
-  data: [],
-  search: '',
-  cache: []
+  data: null,
+  searchValue: '',
+  searchIds: [],
+  listOfNodes: [],
+  listOfAllNodesId: []
 }
 const reducer = (state: DataState, action: DataAction) => {
   switch (action.type) {
@@ -28,15 +32,25 @@ const reducer = (state: DataState, action: DataAction) => {
         ...state,
         data: action.payload.data
       }
-    case 'SET_CACHE':
+    case 'SET_SEARCH_VALUE':
       return {
         ...state,
-        cache: action.payload.cache
+        searchValue: action.payload.searchValue
       }
-    case 'SET_SEARCH':
+    case 'SET_SEARCH_IDS':
       return {
         ...state,
-        search: action.payload.search
+        searchIds: action.payload.searchIds
+      }
+    case 'SET_LIST_OF_NODES':
+      return {
+        ...state,
+        listOfNodes: action.payload.listOfNodes
+      }
+    case 'SET_All_NODE_IDS':
+      return {
+        ...state,
+        listOfAllNodesId: action.payload.listOfAllNodesId
       }
     default:
       return state
