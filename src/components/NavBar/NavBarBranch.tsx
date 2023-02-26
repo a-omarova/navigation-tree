@@ -101,7 +101,12 @@ export const NavBarBranch = (props: BranchProps) => {
   ].join(' ')
 
   return (
-    <li className={linkContainerClassNames}>
+    <li
+      className={linkContainerClassNames}
+      data-test-branch-haschildren={!!node.pages}
+      data-test-branch-open={openNodesList.includes(node.id)}
+      data-test-branch-lvl={node.level}
+    >
       <Link
         className={linkClassNames}
         style={{'--lvl': `${!isSearch ? node.level : 0}`} as React.CSSProperties}

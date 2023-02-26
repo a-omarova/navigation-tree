@@ -17,7 +17,7 @@ describe('search', () => {
   it('show top level navigation on empty search', () => {
     cy.wait(1000).get('[data-test-search=input]').click().type('qwertyuiop')
     cy.get(`[data-test-search=clearButton]`).should('be.visible').click();
-    cy.wait(1000).get('[data-test=navBar]').should('be.visible').click();
+    cy.wait(1000).get('[data-test-navbar=navBar]').should('be.visible').click();
   })
 
   it('hide clear button on empty search', () => {
