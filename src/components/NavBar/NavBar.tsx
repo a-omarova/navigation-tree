@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styles from './NavBar.module.css'
 import axios from 'axios'
 import { NavBarBranch } from '@/components/NavBar/NavBarBranch'
@@ -8,6 +8,8 @@ import { StoreContext } from '@/context/store.context'
 
 
 export const NavBar = () => {
+  const [activeNode, setActiveNode] = useState<string>('')
+  const [openNodesList, setOpenNodesList] = useState<string[]>([])
   const {state, dispatch} = useContext(StoreContext)
 
   const getData = useCallback(() => {
@@ -32,7 +34,6 @@ export const NavBar = () => {
     getData()
   }, [getData])
 
-
   return (
     <nav className={styles.root}>
       <div className={styles.search}>
@@ -41,7 +42,17 @@ export const NavBar = () => {
       {state.data && state.searchValue.length === 0 && (
         <ul data-test-navbar="navBar">
           {state.listOfNodes.map(id => (
-            state.data && <NavBarBranch key={id} node={state.data.entities.pages[id]} isSearch={false}  />
+            state.data && (
+              <NavBarBranch
+                key={id}
+                node={state.data.entities.pages[id]}
+                isSearch={false}
+                activeNode={activeNode}
+                setActiveNode={setActiveNode}
+                openNodesList={openNodesList}
+                setOpenNodesList={setOpenNodesList}
+              />
+            )
           ))}
         </ul>
       )}
@@ -58,7 +69,17 @@ export const NavBar = () => {
       {state.searchIds.length !== 0 && (
         <ul data-test-navbar="search">
           {state.searchIds.map(id => (
-            state.data && <NavBarBranch key={id} node={state.data.entities.pages[id]} isSearch={true} />
+            state.data && (
+              <NavBarBranch
+                key={id}
+                node={state.data.entities.pages[id]}
+                isSearch={true}
+                activeNode={activeNode}
+                setActiveNode={setActiveNode}
+                openNodesList={openNodesList}
+                setOpenNodesList={setOpenNodesList}
+              />
+            )
           ))}
         </ul>
       )}

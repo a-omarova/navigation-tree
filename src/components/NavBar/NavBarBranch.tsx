@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useContext } from 'react'
 import styles from './NavBarBranch.module.css'
 import { Icon } from '@/components/Icon/Icon'
 import Link from 'next/link'
@@ -9,10 +9,16 @@ import { useRouter } from 'next/router'
 
 type BranchProps = {
   node: PageType,
-  isSearch: boolean
+  isSearch: boolean,
+  setActiveNode: Dispatch<SetStateAction<string>>,
+  activeNode: string,
+  // setOpenNodesList: (id: string[]) => void,
+  setOpenNodesList: Dispatch<SetStateAction<string[]>>,
+  openNodesList: string[]
 }
 
-export const NavBarBranch = ({node, isSearch}: BranchProps) => {
+export const NavBarBranch = (props: BranchProps) => {
+  const {node, isSearch, setActiveNode, activeNode, openNodesList, setOpenNodesList} = props
   const {state, dispatch} = useContext(StoreContext)
   const router = useRouter()
 
@@ -38,15 +44,29 @@ export const NavBarBranch = ({node, isSearch}: BranchProps) => {
     return branch
   }, [state.data])
 
+  const setUnsetOpenNode = useCallback(() => {
+    if (!node.pages) return
+
+    if (openNodesList.includes(node.id)) {
+      setOpenNodesList(openNodesList.filter((id) => node.id !== id))
+    } else {
+      setOpenNodesList((list: string[]) => [...list, node.id])
+    }
+
+  }, [node.id, node.pages, openNodesList, setOpenNodesList])
+
   const onClickLink = useCallback((e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault()
     return debounce(
       () => {
-        router.push(`/?url=${node.url || '' }`, undefined, {shallow: true})
+        setUnsetOpenNode();
+        setActiveNode(node.id)
+        node.url && router.push(`/?url=${node.url}`, undefined, {shallow: true})
         const pages = state.data?.entities.pages[node.id].pages
 
         if (!pages) return
-        e.currentTarget.classList.toggle(styles.open);
+
+        e.currentTarget.classList.toggle(styles.open)
 
         const nodeIndex = state.listOfNodes.indexOf(node.id)
         const childNodeIndex = state.listOfNodes.indexOf(pages[0], nodeIndex)
@@ -54,7 +74,7 @@ export const NavBarBranch = ({node, isSearch}: BranchProps) => {
 
         if (childNodeIndex > -1) {
           list = list.filter(item => {
-            return !branch(node.id).includes( item );
+            return !branch(node.id).includes(item)
           })
         } else {
           list.splice(nodeIndex + 1, 0, ...pages)
@@ -68,17 +88,22 @@ export const NavBarBranch = ({node, isSearch}: BranchProps) => {
       500,
       {leading: true, maxWait: 100, trailing: false}
     )()
-  }, [branch, dispatch, node.id, node.url, router, state.data?.entities.pages, state.listOfNodes])
+  }, [branch, dispatch, node.id, node.url, router, setActiveNode, setUnsetOpenNode, state.data?.entities.pages, state.listOfNodes])
 
   const linkContainerClassNames = [
     styles.linkContainer,
-    node.url && node.url === router.query.url && styles.listContainerActive
+    node.url && node.id === activeNode ? styles.listContainerActive : ''
+  ].join(' ')
+
+  const linkClassNames = [
+    styles.link,
+    openNodesList.includes(node.id) ? styles.open : ''
   ].join(' ')
 
   return (
     <li className={linkContainerClassNames}>
       <Link
-        className={styles.link}
+        className={linkClassNames}
         style={{'--lvl': `${!isSearch ? node.level : 0}`} as React.CSSProperties}
         href={`${node.url}`}
         onClick={onClickLink}

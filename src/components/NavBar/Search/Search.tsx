@@ -13,7 +13,7 @@ export const Search = () => {
     const list: string[] = []
 
     state.listOfAllNodesId.forEach((id) => {
-      if (state.data && state.data.entities.pages[id].title.toLocaleLowerCase().includes(state.searchValue)) {
+      if (state.data && state.data.entities.pages[id].title.toLocaleLowerCase().includes(state.searchValue.toLocaleLowerCase())) {
         list.push(id)
       }
     })
@@ -49,7 +49,7 @@ export const Search = () => {
 
     dispatch({
       type: 'SET_SEARCH_VALUE',
-      payload: {searchValue: e.currentTarget.value.toLocaleLowerCase()}
+      payload: {searchValue: e.currentTarget.value}
     })
 
     if (e.currentTarget.value.length === 0) {

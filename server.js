@@ -14,7 +14,7 @@ app.prepare()
     server.use(bodyParser.urlencoded({extended: true}))
 
     server.get('/api/data', (req, res) => {
-      return setTimeout(() => res.send(data), 2000)
+      return setTimeout(() => res.send(data), 1000)
     })
 
     server.get('*', (req, res) => {
