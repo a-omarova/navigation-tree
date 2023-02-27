@@ -60,12 +60,13 @@ export const NavBarBranch = (props: BranchProps) => {
     return debounce(
       () => {
         setUnsetOpenNode();
-        setActiveNode(node.id)
-        node.url && router.push(`/?url=${node.url}`, undefined, {shallow: true})
+        if (node.url) {
+          setActiveNode(node.id)
+          node.url && router.push(`/?url=${node.url}`, undefined, {shallow: true})
+        }
+
         const pages = state.data?.entities.pages[node.id].pages
-
         if (!pages) return
-
         e.currentTarget.classList.toggle(styles.open)
 
         const nodeIndex = state.listOfNodes.indexOf(node.id)
